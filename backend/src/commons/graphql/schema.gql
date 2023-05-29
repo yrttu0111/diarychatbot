@@ -1,0 +1,114 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+  point: Int!
+}
+
+type BoardCategory {
+  id: String!
+  name: String!
+}
+
+type BoardTag {
+  id: String!
+  name: String!
+  boardTags: [Board!]!
+}
+
+type Board {
+  number: Int!
+  writer: String!
+  title: String!
+  contents: String!
+  status: BOARD_PRIVATE!
+  createdAt: DateTime!
+  boardCategory: BoardCategory!
+  user: User!
+  boardTags: [BoardTag!]!
+}
+
+enum BOARD_PRIVATE {
+  PUBLIC
+  PRIVATE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ChatGPT {
+  id: String!
+  ask: String!
+  answer: String!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  fetchBoardCategories: [BoardCategory!]!
+  fetchBoardCategory(name: String!): BoardCategory!
+  fetchBoards: [Board!]!
+  fetchBoard(number: Float!): Board!
+  fetchMyBoards: [Board!]!
+  fetchUser: String!
+  findOneByEmail(email: String!): String!
+  fetchMyDiary: [ChatGPT!]!
+  fetchMyDiaryOne(id: String!): ChatGPT!
+}
+
+type Mutation {
+  createBoardCategory(name: String!): BoardCategory!
+  tokenlogin(email: String!, password: String!): String!
+  login(email: String!, password: String!): String!
+  restoreAccessToken: String!
+  logout: String!
+  createBoard(createBoardInput: CreateBoardInput!): Board!
+  updateBoard(updateBoardInput: UpdateBoardInput!, number: Float!): Board!
+  deleteBoard(number: Float!): Boolean!
+  createUser(createUserInput: CreateUserInput!): User!
+  deleteUser: String!
+  updateUser(updateUserInput: CreateUserInput!): String!
+  updatePassword(email: String!, password: String!, newPassword: String!): String!
+  createDiary(createChatInput: createChatInput!): ChatGPT!
+  deleteMyDiary(id: String!): String!
+  updateMyDiary(id: String!, updateChatInput: UpdateChatInput!): ChatGPT!
+}
+
+input CreateBoardInput {
+  writer: String!
+  title: String!
+  contents: String!
+  status: BOARD_PRIVATE!
+  boardCategoryId: String!
+  boardTags: [String!]!
+}
+
+input UpdateBoardInput {
+  writer: String
+  title: String
+  contents: String
+  status: BOARD_PRIVATE
+  boardCategoryId: String
+  boardTags: [String!]
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  name: String!
+}
+
+input createChatInput {
+  ask: String!
+}
+
+input UpdateChatInput {
+  ask: String
+}
