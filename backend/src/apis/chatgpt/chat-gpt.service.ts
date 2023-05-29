@@ -83,13 +83,14 @@ export class ChatGPTService {
 // 결과를 db에 저장하는 함수
  async create({ createChatInput, user }) {
   // console.log(createChatInput)
-  const {ask} = createChatInput
+  const {ask, title} = createChatInput
   const response = await this.chatgptAxios({createChatInput, user});
   const message= response.data.choices[0].message.content;
     // const who = response.data.choices[0].message.role;
     
     const saveData = {
       ask : ask,
+      title : title,
       answer : message,
       user : {id : user.id},
     }
@@ -116,7 +117,7 @@ export class ChatGPTService {
       throw new BadRequestException('해당하는 일기가 없습니다.');
     }
      
-    const {ask} = updateChatInput
+    const {ask, title} = updateChatInput
     const response = await this.chatgptAxios({createChatInput: {ask}, user});
     const message= response.data.choices[0].message.content;
     const who = response.data.choices[0].message.role;
@@ -124,6 +125,7 @@ export class ChatGPTService {
     const saveData = {
       ...findId,
       ask : ask,
+      title : title,
       answer : message,
       user : {id : user.id},
     }

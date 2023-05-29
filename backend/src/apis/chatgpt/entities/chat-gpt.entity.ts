@@ -11,7 +11,12 @@ export class ChatGPT {
 
     @Column()
     @Field(() => String)
+    title: string;
+
+    @Column()
+    @Field(() => String)
     ask: string;
+
 
     @Column()
     @Field(() => String)

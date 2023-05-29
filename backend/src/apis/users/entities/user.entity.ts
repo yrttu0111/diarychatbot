@@ -21,9 +21,9 @@ export class User {
   name: string;
 
 
-  @Column({ default: 0 })
-  @Field(() => Int)
-  point: number;
+  // @Column({ default: 0 })
+  // @Field(() => Int)
+  // point: number;
 
   @DeleteDateColumn()
   deletedAt: Date;

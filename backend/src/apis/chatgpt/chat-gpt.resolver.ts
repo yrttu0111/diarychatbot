@@ -64,10 +64,10 @@ export class ChatGPTResolver {
     @Args('id') id: string,
     @Args('updateChatInput') updateChatInput: UpdateChatInput,
   ){
-    const {ask} = updateChatInput
-    if(ask === ''){
-      throw new Error('내용을 입력해주세요')
-    }
+    const {ask, title} = updateChatInput
+    // if(ask === ''){
+    //   throw new Error('내용을 입력해주세요')
+    // }
     const result = await this.chatGPTService.update({user : currentUser, id, updateChatInput})
     return result
   }
