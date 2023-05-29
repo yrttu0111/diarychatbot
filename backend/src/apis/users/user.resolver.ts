@@ -21,7 +21,7 @@ export class UserResolver {
     @Args('createUserInput') createUserInput: CreateUserInput,
   ) {
     const { email, password, name } = createUserInput;
-    const hashedPassword = await bcrypt.hash(password, process.env.SALT);
+    const hashedPassword = await bcrypt.hash(password, +(process.env.SALT));
 
     return this.userService.create({ email, hashedPassword, name });
   }
