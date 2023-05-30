@@ -67,9 +67,9 @@ export class ChatGPTService {
       headers: headers,
       data: data
     }
-  
-      
       );
+    
+      // 데이터 가공
     const message = response.data.choices[0].message.content;
     const who = response.data.choices[0].message.role;
     let scoreStr = response.data.choices[0].message.content.replace(/[^0-9]/g,''); // 정규표현식사용 숫자 추출
@@ -84,8 +84,6 @@ export class ChatGPTService {
       score = 0;
     }
     // console.log(score)
-
-    
 
     const result = {
       message : message,
@@ -137,8 +135,7 @@ export class ChatGPTService {
      
     const {ask, title} = updateChatInput
     const response = await this.chatgptAxios({createChatInput: {ask}, user});
-    
-    
+
     const saveData = {
       ...findId,
       ask : ask,
