@@ -46,6 +46,7 @@ type ChatGPT {
   title: String!
   ask: String!
   answer: String!
+  score: Float!
   user: User!
   createdAt: DateTime!
   updatedAt: DateTime!

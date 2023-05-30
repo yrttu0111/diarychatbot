@@ -22,6 +22,10 @@ export class ChatGPT {
     @Field(() => String)
     answer: string;
 
+    @Column({default: 0})
+    @Field(() => Number)
+    score: number;
+
     @ManyToOne(() => User)
     @Field(() => User)
     user: User;

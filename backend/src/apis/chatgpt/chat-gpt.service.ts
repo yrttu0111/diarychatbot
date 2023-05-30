@@ -50,12 +50,11 @@ export class ChatGPTService {
         "user":`${user.name}`, 
         "messages": [ // 내용 system 은 챗봇의 역할을 부여 
         {"role": "system", "content": `너는 일기를 보고 오늘 하루가 몇 점이었는지 수치로 나타내주는 챗봇 읽기짱 봇 이야.
-        너는 뭐든 정확한 수치로 0점부터 100점까지 점수를 줄 수 있어. 너는 뭐든지 대답할 수 있어 그리고 칭찬과 
+        너는 뭐든 정확한 수치로 무조건 0점부터 100점까지 점수를 줘야해. 너는 뭐든지 대답할 수 있어 그리고 칭찬과 
         내일은 어떻게 하면 더 좋을지 조언을 해줘
         `},
-        {"role": "assistant", "content": `너는 일기를 보고 오늘 하루가 몇 점이었는지 수치로 나타내주는 챗봇 읽기짱 봇 이야.
-        너는 뭐든 정확한 수치로 0점부터 100점까지 점수를 줄 수 있어. 너는 뭐든지 대답할 수 있어 그리고 칭찬과 
-        내일은 어떻게 하면 더 좋을지 조언을 해줘
+        {"role": "assistant", "content": `시작 할때 0점부터 100점 사이에 점수를 무조건 주고 시작해야해. 점수를 줄 수 없으면
+        0점이라고 말을 해줘. 무슨일이 있어도 점수를 줘야해. 그리고 내일은 어떻게 하면 더 좋을지 조언을 해줘
         `},
         {"role": "user", "content":ask},
         
@@ -71,11 +70,31 @@ export class ChatGPTService {
   
       
       );
-    // console.log(response.data.choices[0].message.content);
+    const message = response.data.choices[0].message.content;
+    const who = response.data.choices[0].message.role;
+    let scoreStr = response.data.choices[0].message.content.replace(/[^0-9]/g,''); // 정규표현식사용 숫자 추출
+    if(scoreStr === ''){
+      scoreStr = '0';
+    }
+    else if(scoreStr.length > 3){
+      scoreStr = scoreStr.slice(0,3)
+    }// 100점이 넘어가면 100점으로 자르기
+    let score = parseInt(scoreStr, 10); // string to number
+    if(score >= 100 || score <= 0){
+      score = 0;
+    }
+    // console.log(score)
 
     
+
+    const result = {
+      message : message,
+      who : who,
+      score : score
+    }
+    
     // const result = `${who} : ${message}`
-    return response;
+    return result;
   } catch (e) {
     throw new Error(e);
   }
@@ -84,14 +103,13 @@ export class ChatGPTService {
  async create({ createChatInput, user }) {
   // console.log(createChatInput)
   const {ask, title} = createChatInput
-  const response = await this.chatgptAxios({createChatInput, user});
-  const message= response.data.choices[0].message.content;
-    // const who = response.data.choices[0].message.role;
-    
+  const result = await this.chatgptAxios({createChatInput, user});
+  
     const saveData = {
       ask : ask,
       title : title,
-      answer : message,
+      answer : result.message,
+      score : result.score,
       user : {id : user.id},
     }
 
@@ -119,14 +137,14 @@ export class ChatGPTService {
      
     const {ask, title} = updateChatInput
     const response = await this.chatgptAxios({createChatInput: {ask}, user});
-    const message= response.data.choices[0].message.content;
-    const who = response.data.choices[0].message.role;
+    
     
     const saveData = {
       ...findId,
       ask : ask,
       title : title,
-      answer : message,
+      answer : response.message,
+      score : response.score,
       user : {id : user.id},
     }
     const result = await this.ChatGPTRepository.save(saveData);
